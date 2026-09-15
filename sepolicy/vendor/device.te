@@ -1,0 +1,18 @@
+# /dev/ttySAC0
+type bluetooth_device, dev_type;
+
+# /dev/block/mmcblk0p[0-9]
+type emmcblk_device, dev_type, file_type, mlstrustedsubject;
+
+# /dev/rfkill
+type rfkill_device, dev_type;
+
+# /dev/s5p-smem
+type secmem_device, dev_type;
+
+# GPS
+type gps_device, dev_type;
+
+# Radio
+type radio_block_device, dev_type;
+type vendor_radio_device, dev_type;

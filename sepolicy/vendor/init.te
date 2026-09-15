@@ -1,0 +1,16 @@
+# Mount debugfs on /sys/kernel/debug
+allow init debugfs:dir mounton;
+
+allow init efs_file:dir mounton;
+
+# Allow init to bind mount over system files
+allow init system_file:file mounton;
+
+# /dev/block/mmcblk0p[0-9]
+allow init emmcblk_device:blk_file rw_file_perms;
+
+allow init block_device:lnk_file setattr;
+allow init tmpfs:lnk_file create_file_perms;
+
+allow init sysfs:file setattr;
+allow init sysfs_block_writable:file { open write };

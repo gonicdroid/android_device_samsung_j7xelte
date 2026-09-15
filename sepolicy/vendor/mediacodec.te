@@ -1,0 +1,2 @@
+allow mediacodec sysfs_v4l:dir search;
+allow mediacodec sysfs_v4l:file { getattr open read };

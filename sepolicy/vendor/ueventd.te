@@ -1,0 +1,2 @@
+# /dev/block/mmcblk0p[0-9]
+allow ueventd emmcblk_device:blk_file { getattr relabelfrom relabelto create setattr unlink };

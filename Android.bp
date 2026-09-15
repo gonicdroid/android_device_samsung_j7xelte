@@ -1,0 +1,14 @@
+// Copyright (C) 2026 The LineageOS Project
+//
+// SPDX-License-Identifier: Apache-2.0
+
+cc_library_headers {
+    name: "samsung_device_headers",
+    export_include_dirs: ["include"],
+    vendor: true,
+}
+
+cc_defaults {
+    name: "samsung_header_path_defaults",
+    header_libs: ["samsung_device_headers"],
+}
