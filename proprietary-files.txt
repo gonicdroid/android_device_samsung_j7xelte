@@ -6,7 +6,7 @@ vendor/lib/libexynoscamera.so
 vendor/lib/libexynoscamera3.so
 
 # Camera common
-vendor/lib/hw/camera.universal7870_go.so:vendor/lib/hw/camera.exynos5.so
+vendor/lib/hw/camera.universal7870_go.so:vendor/lib/hw/camera.exynos5_vendor.so
 vendor/lib/libhwjpeg.so
 vendor/lib/libcsc.so
 vendor/lib/libstainkiller.so
