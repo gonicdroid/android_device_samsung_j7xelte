@@ -116,6 +116,7 @@ vendor/lib/librilutils.so
 vendor/lib/libreference-ril.so
 vendor/lib/vendor.samsung.hardware.radio@1.1_vendor.so
 vendor/lib/vendor.samsung.hardware.radio.secoemhook@1.0_vendor.so
+vendor/lib/vendor.samsung.hardware.radio.channel@1.0_vendor.so
 
 # OMX
 vendor/lib/libExynosOMX_Core.so

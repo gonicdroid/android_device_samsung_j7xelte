@@ -69,7 +69,6 @@ BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_lp_charg
 BOARD_CHARGER_SHOW_PERCENTAGE := true
 CHARGING_ENABLED_PATH := /sys/class/power_supply/battery/batt_lp_charging
 
-
 # Filesystems
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
@@ -89,8 +88,6 @@ TARGET_KERNEL_LLVM_BINUTILS := false
 KERNEL_TOOLCHAIN := $(shell pwd)/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 TARGET_USES_64_BIT_BINDER := true
-#TARGET_PREBUILT_KERNEL := device/samsung/j7xelte/Image
-#TARGET_PREBUILT_DTB := device/samsung/j7xelte/dtb.img
 
 
 # LIBHWJPEG
@@ -116,7 +113,7 @@ BOARD_FLASH_BLOCK_SIZE := 4096
 
 # Platform
 BOARD_VENDOR := samsung
-TARGET_BOARD_PLATFORM := universal7870
+TARGET_BOARD_PLATFORM := exynos5
 TARGET_BOOTLOADER_BOARD_NAME := exynos7870
 TARGET_SOC := exynos7870
 
@@ -139,17 +136,17 @@ TARGET_USES_VND_SECRIL := true
 # Root
 BOARD_ROOT_EXTRA_FOLDERS := efs
 
-# Samsung HALs
-TARGET_AUDIOHAL_VARIANT := gtaxl
-
 # SELinux
 BOARD_VENDOR_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR += $(COMMON_PATH)/sepolicy/private
 SELINUX_IGNORE_NEVERALLOWS := true
 
+# Bootanimation
+TARGET_SCREEN_WIDTH := 720
+TARGET_SCREEN_HEIGHT := 1280
 
-# Vendor security patch level - P580ZSS1CTI1
-VENDOR_SECURITY_PATCH := 2020-09-01
+# Vendor security patch level - J710MNUBS4CTF2
+VENDOR_SECURITY_PATCH := 2020-03-01
 
 # Vendor separation
 TARGET_COPY_OUT_VENDOR := system/vendor
@@ -176,7 +173,7 @@ ENABLE_VENDOR_RIL_SERVICE := true
 ALLOW_MISSING_DEPENDENCIES := true
 
 BOARD_VNDK_VERSION := current
-# BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
+BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 
 # AUDIO
 USE_XML_AUDIO_POLICY_CONF := 1
