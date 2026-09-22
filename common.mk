@@ -287,6 +287,7 @@ PRODUCT_PACKAGES += \
     init.wifi.rc \
     init.gps.rc \
     ueventd.samsungexynos7870.rc \
+    init.mobicore.rc \
     cbd 
 
 # Offmode charger

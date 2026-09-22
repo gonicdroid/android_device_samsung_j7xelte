@@ -216,10 +216,16 @@ on fs
 # Offline charging
 service charger /sbin/charger
     class charger
-    user system
-    group system graphics input 
+    user root
+    group root graphics input
     capabilities SYS_BOOT
     seclabel u:r:charger:s0
+
+on charger
+    wait /dev/block/platform/13540000.dwmmc0/by-name/EFS
+    mount ext4 /dev/block/platform/13540000.dwmmc0/by-name/EFS /efs nosuid nodev noatime noauto_da_alloc,discard,journal_async_commit
+    mkdir /efs/lpm 0775 system system
+    class_start charger
 
 # Bluetooth
 on property:vendor.wc_transport.start_hci=true
