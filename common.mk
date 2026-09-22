@@ -75,15 +75,15 @@ PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-service.clearkey \
     android.hardware.drm@1.0-service.widevine
 
+# Gatekeeper 
+PRODUCT_PACKAGES += \
+    android.hardware.gatekeeper@1.0-service \
+    android.hardware.gatekeeper@1.0-impl 
+
 # GNSS
 PRODUCT_PACKAGES += \
     android.hardware.gnss@1.0-impl \
     android.hardware.gnss@1.0-service
-
-# Gatekeeper Software Implementation
-PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0-impl \
-    android.hardware.gatekeeper@1.0-service.software
 
 # Graphics & Display
 PRODUCT_PACKAGES += \
@@ -104,7 +104,7 @@ PRODUCT_PACKAGES += \
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
-    android.hardware.keymaster@3.0-service
+    android.hardware.keymaster@3.0-service 
 
 # Lights
 PRODUCT_PACKAGES += \
@@ -285,8 +285,9 @@ PRODUCT_PACKAGES += \
     init.vendor.rilchip.rc \
     init.vendor.rilcommon.rc \
     init.wifi.rc \
+    init.gps.rc \
     ueventd.samsungexynos7870.rc \
-    cbd
+    cbd 
 
 # Offmode charger
 PRODUCT_PACKAGES += \

@@ -130,21 +130,7 @@ vendor/lib/omx/libOMX.Exynos.AVC.Encoder.so
 vendor/lib/omx/libOMX.Exynos.HEVC.Encoder.so
 vendor/lib/omx/libOMX.Exynos.MPEG4.Encoder.so
 vendor/lib/omx/libOMX.Exynos.VP8.Encoder.so
-
-# TEE
-vendor/app/mcRegistry/00060308060501020000000000000000.tlbin
-vendor/app/mcRegistry/020a0000000000000000000000000000.drbin
-vendor/app/mcRegistry/07060000000000000000000000000000.tlbin
-vendor/app/mcRegistry/08130000000000000000000000000000.tlbin
-vendor/app/mcRegistry/FFFFFFFFD00000000000000000000016.tlbin
-vendor/tee/startup.tzar
-vendor/tee/00000000-0000-0000-0000-474154454b45
-vendor/tee/00000000-0000-0000-0000-4b45594d5354
-vendor/tee/00000000-0000-0000-0000-505256544545
-vendor/tee/driver/18d9f073-18a5-4ade-9def-875e07f7f293_
-vendor/lib/libwvhidl.so
-vendor/lib/mediadrm/libwvdrmengine.so
-vendor/lib/mediadrm/libdrmclearkeyplugin.so
+vendor/lib/libstagefrighthw.so
 
 # Bluetooth - J710MNUBS4CTF2
 vendor/lib/libbt-vendor.so
@@ -177,4 +163,36 @@ vendor/lib/hw/vendor.samsung.hardware.nfc@1.0-impl.so
 vendor/bin/hw/vendor.samsung.hardware.nfc@1.0-service
 vendor/etc/init/vendor.samsung.hardware.nfc@1.0-service.rc
 
+# Trustonic Kinibi (MobiCore) TEE
+vendor/bin/mcDriverDaemon
+vendor/lib/libMcClient.so
+vendor/lib/libMcRegistry.so
 
+# Trustlets (mcRegistry)
+vendor/app/mcRegistry/07010000000000000000000000000000.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000000a.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000017.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000073.tlbin
+vendor/app/mcRegistry/07060000000000000000000000000000.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000000b.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000002f.tlbin
+vendor/app/mcRegistry/ffffffffd0000000000000000000000a.tlbin
+vendor/app/mcRegistry/08130000000000000000000000000000.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000000f.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000030.tlbin
+vendor/app/mcRegistry/ffffffffd00000000000000000000016.tlbin
+vendor/app/mcRegistry/FFFFFFFF000000000000000000000001.drbin
+vendor/app/mcRegistry/ffffffff000000000000000000000012.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000038.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000005.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000013.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000041.tlbin
+
+# Security HALs
+vendor/lib/hw/gatekeeper.exynos7870.so:vendor/lib/hw/gatekeeper.exynos5.so
+vendor/lib/hw/keystore.exynos7870.so:vendor/lib/hw/keystore.exynos5.so
+
+# TEE
+vendor/lib/libwvhidl.so
+vendor/lib/mediadrm/libwvdrmengine.so
+vendor/lib/mediadrm/libdrmclearkeyplugin.so

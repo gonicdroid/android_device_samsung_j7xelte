@@ -2,6 +2,16 @@
 // Copyright (C) 2026 Brian Nahuel Götte
 // SPDX-License-Identifier: Apache-2.0
 //
+// Minimal HAL1 shim for Samsung Exynos7870 (j7xelte).
+//
+// Purpose:
+//   1. Force camera devices to report as HAL1 (CAMERA_DEVICE_API_VERSION_1_0)
+//   2. Declare cameras as mutually exclusive (resource_cost=100 + conflicting_devices)
+//      so the CameraService never opens both simultaneously (the ISP can't handle it)
+//   3. Route device opens through open_legacy with HAL1 version
+//
+// Everything else is passed through to the vendor HAL untouched.
+//
 
 #define LOG_TAG "ExynosCameraShim_HAL1"
 
@@ -10,16 +20,17 @@
 
 #include <dlfcn.h>
 #include <utils/Log.h>
-#include <mutex>
 #include <stdlib.h>
 #include <string.h>
-#include <string>
 
 static camera_module_t* gVendorModule = nullptr;
-static std::mutex gCameraMutex;
 
-static bool gCamera0Active = false;
-static std::string gCachedCam1Params = "";
+// Static conflict declarations — these must persist for the lifetime of the process.
+// CameraService reads these pointers directly; they cannot be stack/temp allocations.
+static char  sCam1Id[] = "1";
+static char  sCam0Id[] = "0";
+static char* sCam0Conflicts[] = { sCam1Id };
+static char* sCam1Conflicts[] = { sCam0Id };
 
 static int load_vendor_module() {
     if (gVendorModule) return 0;
@@ -32,115 +43,61 @@ static int load_vendor_module() {
     return gVendorModule ? 0 : -EINVAL;
 }
 
-// Camera 1 mock used when Camera 0 owns the ISP.
-// CameraService may open both cameras simultaneously to query capabilities.
-static char* mock_get_parameters(struct camera_device * /*dev*/) {
-    if (!gCachedCam1Params.empty()) {
-        return strdup(gCachedCam1Params.c_str());
-    }
-    // Contingency string if camera1 params are not cached
-    return strdup("preview-size-values=1280x720,960x720,640x480;picture-size-values=2576x1932,1920x1080;jpeg-thumbnail-quality=90;");
-}
-
-static void mock_put_parameters(struct camera_device * /*dev*/, char *params) {
-    if (params) free(params);
-}
-
-static int mock_device_close(struct hw_device_t* dev) {
-    if (dev) {
-        camera_device_t* cam_dev = (camera_device_t*)dev;
-        if (cam_dev->ops) delete cam_dev->ops;
-        delete cam_dev;
-    }
-    return 0;
-}
-
-static camera_device_t* create_mock_camera1_device() {
-    camera_device_t* dev = new camera_device_t();
-    memset(dev, 0, sizeof(camera_device_t));
-    
-    dev->common.tag = HARDWARE_DEVICE_TAG;
-    dev->common.version = CAMERA_DEVICE_API_VERSION_1_0;
-    dev->common.close = mock_device_close;
-    
-    camera_device_ops_t* ops = new camera_device_ops_t();
-    memset(ops, 0, sizeof(camera_device_ops_t));
-    ops->get_parameters = mock_get_parameters;
-    ops->put_parameters = mock_put_parameters;
-    
-    dev->ops = ops;
-    return dev;
-}
-
-// Intercept close camera 0
-static int (*gRealCam0Close)(struct hw_device_t* dev) = nullptr;
-static int shim_cam0_close(struct hw_device_t* dev) {
-    std::lock_guard<std::mutex> lock(gCameraMutex);
-    gCamera0Active = false;
-    return gRealCam0Close(dev);
-}
-
 static int shim_get_camera_info(int camera_id, struct camera_info *info) {
     if (load_vendor_module() != 0) return -EINVAL;
-    
+
     memset(info, 0, sizeof(struct camera_info));
     int ret = gVendorModule->get_camera_info(camera_id, info);
-    
+
     if (ret == 0) {
-        // Force Both cameras to HAL 1.0
+        // Force HAL1
         info->device_version = CAMERA_DEVICE_API_VERSION_1_0;
-        
-        // Prevent Android from planning arbitrary evictions
-        info->resource_cost = 50;
-        info->conflicting_devices = nullptr;
-        info->conflicting_devices_length = 0;
+
+        // Declare cameras as mutually exclusive.
+        // resource_cost = 100 means "this camera uses 100% of the ISP".
+        // conflicting_devices explicitly tells CameraService to never have both open.
+        // This replaces the need for a mock camera device or state tracking.
+        info->resource_cost = 100;
+        if (camera_id == 0) {
+            info->conflicting_devices = sCam0Conflicts;
+            info->conflicting_devices_length = 1;
+        } else if (camera_id == 1) {
+            info->conflicting_devices = sCam1Conflicts;
+            info->conflicting_devices_length = 1;
+        }
+
+        ALOGI("get_camera_info(%d): forzado HAL1, resource_cost=100, conflictos declarados", camera_id);
     }
     return ret;
 }
 
 static int shim_device_open(const hw_module_t* /*module*/, const char* name, hw_device_t** device) {
     if (load_vendor_module() != 0) return -EINVAL;
-    std::lock_guard<std::mutex> lock(gCameraMutex);
-    
-    int camera_id = atoi(name);
 
-    // If Camera 0 is active, return a mock Camera 1 device.
-    // The Samsung ISP cannot handle both cameras simultaneously.
-    if (camera_id == 1 && gCamera0Active) {
-        ALOGW("Conflict detected: Camera 0 active. Intercepting Camera 1 opening with Mock");
-        *device = (hw_device_t*)create_mock_camera1_device();
-        return 0;
-    }
+    ALOGI("Peticion de apertura recibida para camara %s", name);
 
-    // Legacy native open
-    int ret = -ENOSYS;
+    // Use open_legacy to force HAL1 path if available, otherwise fall back to regular open.
+    int ret;
     if (gVendorModule->open_legacy != nullptr) {
-        ret = gVendorModule->open_legacy((const hw_module_t*)gVendorModule, name, CAMERA_DEVICE_API_VERSION_1_0, device);
+        ret = gVendorModule->open_legacy(
+            (const hw_module_t*)gVendorModule, name,
+            CAMERA_DEVICE_API_VERSION_1_0, device);
     } else {
-        ret = gVendorModule->common.methods->open((const hw_module_t*)gVendorModule, name, device);
+        ret = gVendorModule->common.methods->open(
+            (const hw_module_t*)gVendorModule, name, device);
     }
 
-    if (ret == 0 && *device != nullptr) {
-        if (camera_id == 0) {
-            gCamera0Active = true;
-            gRealCam0Close = (*device)->close;
-            (*device)->close = shim_cam0_close;
-            ALOGI("Camara 0 abierta exitosamente en hardware");
-        } else if (camera_id == 1) {
-            // Save the real parameters of the front camera in the first clean reading
-            camera_device_t* cam_dev = (camera_device_t*)(*device);
-            if (cam_dev->ops && cam_dev->ops->get_parameters && gCachedCam1Params.empty()) {
-                char* p = cam_dev->ops->get_parameters(cam_dev);
-                if (p) {
-                    gCachedCam1Params = p;
-                    cam_dev->ops->put_parameters(cam_dev, p);
-                }
-            }
-        }
+    if (ret == 0) {
+        ALOGI("Camara %s abierta exitosamente via %s", name,
+              gVendorModule->open_legacy ? "open_legacy" : "open");
+    } else {
+        ALOGE("Fallo al abrir camara %s: %d", name, ret);
     }
 
     return ret;
 }
+
+// --- Pass-through module functions ---
 
 static struct hw_module_methods_t shim_module_methods = { .open = shim_device_open };
 
@@ -167,10 +124,10 @@ static void shim_get_vendor_tag_ops(vendor_tag_ops_t* ops) {
 camera_module_t HAL_MODULE_INFO_SYM = {
     .common = {
         .tag = HARDWARE_MODULE_TAG,
-        .module_api_version = CAMERA_MODULE_API_VERSION_2_4, 
+        .module_api_version = CAMERA_MODULE_API_VERSION_2_4,
         .hal_api_version = HARDWARE_HAL_API_VERSION,
         .id = CAMERA_HARDWARE_MODULE_ID,
-        .name = "HAL1 Shim",
+        .name = "HAL1 Robust Shim",
         .author = "Gonic",
         .methods = &shim_module_methods,
         .dso = nullptr,
