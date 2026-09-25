@@ -93,6 +93,30 @@
         <item>restart_recovery</item>
         <item>restart_download</item>
     </string-array>
+    
+    <!-- LiveDisplay -->
+    <bool name="config_enableLiveDisplay">true</bool>
+
+    <!-- Kills GPU performance, so we block it -->
+    <integer name="config_dayColorTemperature">6500</integer>
+    <integer name="config_nightColorTemperature">6500</integer>
+    <integer name="config_minColorTemperature">6500</integer>
+    <integer name="config_maxColorTemperature">6500</integer>
+
+    <!-- BurnIn protection. This should be enabled on devices that have OLED displays -->
+    <bool name="config_enableBurnInProtection">true</bool>
+
     <!-- Default LiveDisplay mode (0 = off) -->
     <integer name="config_defaultLiveDisplayMode">0</integer>
+
+     <!-- These values should map to the true min and max
+         that the backend is capable of adjusting to. This
+         is more important when using the ColorBalance mode,
+         as the discrete adjustment is interpolated between
+         this range (with config_dayColorTemperature at zero) -->
+    <bool name="config_defaultAutoContrast">false</bool>
+    <bool name="config_defaultAutoOutdoorMode">false</bool>
+    <bool name="config_defaultColorEnhancement">false</bool>
+    <bool name="config_defaultCABC">false</bool>
+
 </resources>
