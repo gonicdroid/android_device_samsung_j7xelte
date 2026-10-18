@@ -1,3 +1,1 @@
-add_lunch_combo lineage_j7xelte-userdebug
-add_lunch_combo lineage_j7xelte-eng
-export ANDROID_MAJOR_VERSION=o
+export ANDROID_MAJOR_VERSION=q
