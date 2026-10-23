@@ -31,10 +31,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     NfcNci \
     Tag \
-    com.android.nfc_extras
+    com.android.nfc_extras \
+    android.hardware.nfc@1.2-service.samsung
 
 # NFC Configs from J710MNUBS4CTF2
 PRODUCT_COPY_FILES += \
+    $(DEVICE_PATH)/configs/nfc/libnfc-sec-hal.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-sec-vendor.conf \
     $(DEVICE_PATH)/configs/nfc/libnfc-sec-hal.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-sec-hal.conf \
     $(DEVICE_PATH)/configs/nfc/libnfc-sec.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-sec.conf \
     $(DEVICE_PATH)/configs/nfc/libnfc-sec.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-nci.conf \
