@@ -19,15 +19,11 @@ DEVICE_PATH := device/samsung/j7xelte
 # Device Overlay
 DEVICE_PACKAGE_OVERLAYS += $(DEVICE_PATH)/overlay
 
-# -----------------------------------------------------------
-# Audio - mixer paths specific to j7xelte
-# -----------------------------------------------------------
+# Audio
 PRODUCT_COPY_FILES += \
-    $(DEVICE_PATH)/configs/audio/mixer_paths_rev03.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_rev03.xml
+    $(DEVICE_PATH)/configs/audio/mixer_paths_rev03.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_0.xml
 
-# -----------------------------------------------------------
-# NFC Samsung S3NRN80 (j7xelte only)
-# -----------------------------------------------------------
+# NFC Samsung S3NRN80
 PRODUCT_PACKAGES += \
     NfcNci \
     Tag \
