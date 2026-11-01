@@ -31,14 +31,14 @@ $(call inherit-product, vendor/samsung/j7xelte/j7xelte-vendor.mk)
 $(call inherit-product, device/samsung/j7xelte/device.mk)
 
 # Inherit some common Lineage stuff.
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+$(call inherit-product, vendor/qassa/config/common_full_phone.mk)
 
 # Device identifiers. These must come after all inclusions.
 PRODUCT_DEVICE := j7xelte
 PRODUCT_MODEL := SM-J710
 PRODUCT_BRAND := samsung
 PRODUCT_MANUFACTURER := Samsung
-PRODUCT_NAME := lineage_j7xelte
+PRODUCT_NAME := qassa_j7xelte
 PRODUCT_GMS_CLIENTID_BASE := android-samsung
 
 PRODUCT_BUILD_PROP_OVERRIDES += \

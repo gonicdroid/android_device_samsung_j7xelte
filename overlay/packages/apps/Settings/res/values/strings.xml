@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- xd. About Phone -->
+    <string name="xd_device_name_summary">Galaxy J7 (2016)</string>
+    <string name="xd_chipset_type_summary">Exynos 7870 Octa</string>
+    <string name="xd_gpu_summary">Mali-T830 MP1</string>
+    <string name="xd_camera_mp_summary">13 MP / 5 MP</string>
+    <string name="xd_screen_type_summary">5.5\" Super AMOLED (720x1280)</string>
+
+    <!-- Maintainer -->
+    <string name="maintainer_name">Gonic</string>
+</resources>
+

@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-$(call inherit-product, device/samsung/j7xelte/lineage_j7xelte.mk)
+$(call inherit-product, device/samsung/j7xelte/qassa_j7xelte.mk)
